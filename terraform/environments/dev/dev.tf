@@ -114,7 +114,7 @@ module "app_elb" {
   vpc_id                  = "${module.vpc.vpc_id}"
   zone_id                 = "${module.web_elb.elb_zone_id}"
   #subnets                 = "subnet-05c5d2bd1c4cdb6b4"
-  subnets                 =  "${element(split(",", module.vpc.public_subnet_ids), 0)}"
+  subnets                 =  "${element(split(",", module.vpc.public_subnet_ids), 1)}"
   ingress_security_groups = "${module.web_asg.asg_security_group_id}"
 }
 

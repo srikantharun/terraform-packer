@@ -19,7 +19,6 @@ resource "aws_subnet" "public" {
   cidr_block        = "${element(split(",", var.public_subnets), count.index)}"
   availability_zone = "${element(split(",", var.azs), count.index)}"
 
-
   lifecycle {
     create_before_destroy = true
   }

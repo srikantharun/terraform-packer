@@ -161,4 +161,3 @@ resource "aws_cloudwatch_metric_alarm" "cpu-low" {
   alarm_description = "This metric monitors ec2 cpu utilization"
   alarm_actions     = ["${aws_autoscaling_policy.agent-scale-down.arn}", "${var.sns_arn}"]
 }
-

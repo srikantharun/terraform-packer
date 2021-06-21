@@ -29,6 +29,7 @@ resource "aws_security_group" "bastion" {
     cidr_blocks = ["${var.in_allowed_cidr_blocks}"]
   }
 
+
 }
 
 #----------- BASTION HOST ----------#

@@ -32,7 +32,6 @@ resource "aws_security_group" "web_elb" {
   vpc_id      = "${var.vpc_id}"
   description = "Web ELB Security Group"
 
-
   ingress {
     from_port   = 443
     to_port     = 443

@@ -19,4 +19,3 @@
     state: present
   become: yes
   become_user: deploy
-

@@ -1,4 +1,4 @@
-# Terraform Example Stack
+# Terraform Packer Example Stack
 
 ## Overview
 

@@ -1,0 +1,36 @@
+## {{ ansible_managed }}
+## From ipr-cnrs.netdata role
+
+# NetData Configuration
+
+# The current full configuration can be retrieved from the running
+# server at the URL
+#
+#   http://localhost:19999/netdata.conf
+#
+# for example:
+#
+#   wget -O /etc/netdata/netdata.conf http://localhost:19999/netdata.conf
+#
+
+[global]
+	run as user = netdata
+	web files owner = root
+	web files group = root
+	memory mode = '{{ netdata__conf_memory_mode }}'
+
+[web]
+	# Netdata is not designed to be exposed to potentially hostile
+	# networks.See https://github.com/firehol/netdata/issues/164
+	bind to = {{ netdata__conf_bind_ip }}:{{ netdata__conf_bind_port }}
+
+{% if netdata__registry_announce %}
+[registry]
+{% if netdata__registry_enable %}
+	enabled = yes
+{% else %}
+	enabled = no
+{% endif %}
+	registry to announce = {{ netdata__registry_announce }}
+	registry hostname = {{ netdata__registry_hostname }}
+{%- endif %}

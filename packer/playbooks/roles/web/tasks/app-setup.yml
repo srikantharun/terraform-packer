@@ -5,17 +5,13 @@
 # Is currently hosted from a public GitHub repo
 - name: clone git repo
   git:
-    repo: 'git@github.com:srikantharun/terraform-packer.git'
+    repo: 'https://github.com/jnordberg/webapp.git'
     dest: '/srv/app/example-node-app'
-    key_file: /root/.ssh/id_ed25519
-    accept_hostkey: yes
-    force: yes
-  become: yes
+    clone: yes
+    update: yes
 
 # Install npm modules
 - name: install npm modules
   npm:
     path: /srv/app/example-node-app
     state: present
-  become: yes
-  become_user: deploy

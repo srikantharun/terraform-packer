@@ -1,0 +1,35 @@
+install_logrotate: false
+logrotate_conf_dir: "/etc/logrotate.d/"
+logrotate_scripts: []
+logrotate_run_hourly: true
+logrotate_run_daily: true
+
+
+netdata__base_packages:
+    - 'netdata'
+netdata__install_recommends: True
+netdata__deploy_state: 'present'
+netdata__service_name: 'netdata'
+netdata__service_manage: True
+netdata__group_name: 'nonexistent-host-group'
+netdata__default_etc_src: '../templates/etc/netdata'
+netdata__etc_src: '{{ (inventory_dir | realpath + "/../resources/") + "files/by-group/all/etc/netdata/" }}'
+netdata__group_etc_src: '{{ (inventory_dir | realpath + "/../resources/") + "files/by-group/" + netdata__group_name + "/etc/netdata" }}'
+netdata__host_etc_src: '{{ (inventory_dir | realpath + "/../resources/") + "files/by-host/" + inventory_hostname  + "/etc/netdata" }}'
+netdata__conf_bind_ip: '127.0.0.1'
+netdata__conf_bind_port: '19999'
+netdata__conf_memory_mode: 'ram'
+netdata__conf_recipient_email: 'root'
+netdata__registry_enable: False
+netdata__registry_announce: ''
+netdata__registry_hostname: '{{ ansible_hostname }}'
+netdata__slave_enable: False
+netdata__slave_destination: 'netdata.{{ ansible_domain }}'
+netdata__slave_api_key: ''
+netdata__slave_buffer_size: '1048576'
+netdata__slave_reconnect: '5'
+netdata__master_enable: False
+netdata__master_api_key: ''
+netdata__master_history: '3600'
+netdata__master_memory_mode: 'ram'
+netdata__master_health_alarm: 'auto'

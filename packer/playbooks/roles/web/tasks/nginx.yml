@@ -1,36 +1,31 @@
 ---
-##### NGINX CONFIGURATION #####
+- name: Update apt cache and install Nginx
+  apt:
+     name: nginx
+     state: latest
+     update_cache: yes
 
-# touch relevant files and directories
-- name: create pid and logs directory
-  file:
-    path: /usr/share/nginx/{{ item }}
-    state: directory
-  with_items:
-    - pids
-    - logs
-  become: yes
+- name: Copy website files to the server's document root
+  copy:
+     src: "{{ app_root }}"
+     dest: "{{ document_root }}"
+     mode: preserve
 
-- name: touch required files
-  file: 
-    path: /usr/share/nginx/{{ item }}
-    state: touch
-  with_items:
-    - "logs/access.log"
-    - "logs/error.log"
-    - "pids/nginx.pid"
-  become: yes
-
-# Copy over NGiNX config
-- name: Copy NGiNX Config
+- name: Apply Nginx template
   template:
-    src: templates/nginx.conf.j2
-    dest: /etc/nginx/nginx.conf
-  become: yes
+        src: files/nginx.conf.j2
+        dest: /etc/nginx/sites-available/default
+  notify: Restart Nginx
 
-# Restart and enable nginx
-- name: enable and restart nginx
-  service:
-    name: nginx
-    state: started
-    enabled: yes
+- name: Enable new site
+  file:
+     src: /etc/nginx/sites-available/default
+     dest: /etc/nginx/sites-enabled/default
+     state: link
+  notify: Restart Nginx
+
+- name: Allow all access to tcp port 80
+  ufw:
+     rule: allow
+     port: '80'
+     proto: tcp

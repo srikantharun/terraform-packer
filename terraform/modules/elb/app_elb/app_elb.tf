@@ -12,18 +12,18 @@ resource "aws_acm_certificate" "default" {
   }
 }
 
-resource "aws_route53_record" "validation" {
-  count = 2
-  zone_id = var.zone_id
-  name = element(aws_acm_certificate.default.domain_validation_options.*.resource_record_name, count.index)
-  type    = element(aws_acm_certificate.default.domain_validation_options.*.resource_record_type, count.index)
-  records = [element(aws_acm_certificate.default.domain_validation_options.*.resource_record_value, count.index)]
-  ttl = "300"
-}
+#resource "aws_route53_record" "validation" {
+#  count = 2
+#  zone_id = var.zone_id
+#  name = element(aws_acm_certificate.default.domain_validation_options.*.resource_record_name, count.index)
+#  type    = element(aws_acm_certificate.default.domain_validation_options.*.resource_record_type, count.index)
+#  records = [element(aws_acm_certificate.default.domain_validation_options.*.resource_record_value, count.index)]
+#  ttl = "300"
+#}
 
 resource "aws_acm_certificate_validation" "default" {
     certificate_arn = "${aws_acm_certificate.default.arn}"
-    validation_record_fqdns = aws_route53_record.validation.*.fqdn
+    #validation_record_fqdns = aws_route53_record.validation.*.fqdn
 }
 
 #--------- CREATE APP ELB SECURITY GROUP ---------#
@@ -113,7 +113,7 @@ resource "aws_elb" "elb" {
     healthy_threshold   = 2
     unhealthy_threshold = 3
     timeout             = 5
-    target              = "HTTP:80/status"
+    target              = "HTTP:80/"
     interval            = 10
   }
 

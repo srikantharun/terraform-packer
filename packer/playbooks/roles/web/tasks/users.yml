@@ -6,16 +6,30 @@
   group:
     name: deploy
     state: present
-  become: yes
+
+- name: Make sure we have a 'wheel' group
+  group:
+    name: wheel
+    state: present
+
+- name: Allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
 
 # Set Up User
 - name: Set up deploy user
   user:
     name: deploy
     comment: "Deploy User"
-    group: deploy
+    groups: "wheel"
+    append: yes
+    state: present
     home: /srv/app
-  become: yes
+    createhome: yes
 
 # Create required directories
 - name: create /srv/app
@@ -26,4 +40,21 @@
     owner: deploy
     group: deploy
     recurse: yes
-  become: yes
+
+# Create .ssh directories
+- name: create /srv/app
+  file:
+    path: /srv/app/.ssh
+    state: directory
+    mode: 0700
+    owner: deploy
+    group: deploy
+
+# Copy authorized_keys to remote .ssh folder
+- name: Copy authorized_keys to /srv/app
+  copy:
+    src: authorized_keys
+    dest: /srv/app/.ssh/authorized_keys
+    owner: deploy
+    group: deploy
+    mode : "0700"

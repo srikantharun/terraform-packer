@@ -1,0 +1,70 @@
+---
+# tasks file for netdata
+- name: To install NetData
+  apt:
+       name: ['zlib1g-dev', 'uuid-dev', 'libmnl-dev', 'pkg-config', 'curl', 'gcc', 'make', 'autoconf', 'autoconf-archive', 'autogen','python-mysqldb', 'lm-sensors', 'python-psycopg2', 'netcat', 'nodejs', 'libuv1-dev', 'zlib1g-dev'] 
+       update_cache: yes
+       state: present
+
+- name: Clone Netdata install repo
+  git:
+      repo: 'https://github.com/firehol/netdata.git'
+      dest: /opt/netdata/
+      clone: yes
+      update: yes
+
+- name: Install netdata with shell script
+  shell: bash netdata-installer.sh --dont-wait --libs-are-really-here
+  args:
+     chdir: /opt/netdata
+
+- name: Ensure Netdata directory structure exists
+  file:
+    path: '/etc/netdata/{{ item.path }}'
+    state: directory
+    owner: 'root'
+    group: 'netdata'
+    mode: '0755'
+  with_filetree:
+    - '{{ netdata__host_etc_src }}'
+    - '{{ netdata__group_etc_src }}'
+    - '{{ netdata__etc_src }}'
+    - '{{ netdata__default_etc_src }}'
+  when: (item.state == 'directory') and (netdata__deploy_state == "present")
+  notify: ['Restart Netdata service']
+
+- name: Generate Netdata configuration files
+  template:
+    src: '{{ item.src }}'
+    dest: "/etc/netdata/{{ item.path | replace('.j2','') }}"
+    owner: 'root'
+    group: 'netdata'
+    mode: '{{ item.mode }}'
+  with_filetree:
+    - '{{ netdata__host_etc_src }}'
+    - '{{ netdata__group_etc_src }}'
+    - '{{ netdata__etc_src }}'
+    - '{{ netdata__default_etc_src }}'
+  when: (item.state == 'file') and (netdata__deploy_state == "present")
+  notify: ['Restart Netdata service']
+
+- name: Generate Netdata configuration symlinks
+  template:
+    src: '{{ item.src }}'
+    dest: "/etc/netdata/{{ item.path | replace('.j2','') }}"
+    state: 'link'
+    force: true
+  with_filetree:
+    - '{{ netdata__host_etc_src }}'
+    - '{{ netdata__group_etc_src }}'
+    - '{{ netdata__etc_src }}'
+    - '{{ netdata__default_etc_src }}'
+  when: (item.state == 'link') and (netdata__deploy_state == "present")
+  notify: ['Restart Netdata service']
+
+- name: enable service netdata and ensure it is not masked
+  systemd:
+    name: netdata
+    enabled: yes
+    masked: no
+

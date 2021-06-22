@@ -5,3 +5,22 @@
     name: awslogs
     state: restarted
     enabled: yes
+
+
+- name: restart sshd
+  become: yes
+  service:
+    name: sshd
+    state: restarted
+    enabled: yes
+
+- name: Restart Netdata service
+  service:
+    name: '{{ netdata__service_name }}'
+    state: "restarted"
+    enabled: '{{ netdata__service_manage | bool }}'
+
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted

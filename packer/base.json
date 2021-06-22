@@ -29,11 +29,6 @@
 
   "provisioners": [
     {
-      "type": "file",
-      "source": "./id_ed25519",
-      "destination": "/tmp/id_ed25519" 
-    },
-    {
       "type": "shell",
       "execute_command": "echo 'packer' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
       "inline": [

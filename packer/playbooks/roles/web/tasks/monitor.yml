@@ -1,0 +1,30 @@
+---
+
+- name: create /opt/scripts
+  file:
+    path: /opt/scripts
+    state: directory
+    mode: 0744
+    owner: deploy
+    recurse: yes
+  become: yes
+
+- name: Setup monitoring script
+  copy:
+    src: monitordiskspace.sh
+    dest: /opt/scripts/monitordiskspace.sh
+    owner: deploy
+    group: wheel
+    mode: "0755"
+  become: yes
+
+- name: Install Batchjobs on crontab
+  cron:
+    name: "Manage Disk Space"
+    user: deploy
+    minute: "5"
+    job: "/opt/scripts/monitordiskspace.sh >> /var/log/freespace.log 2>&1"
+    disabled: "no"
+  become: yes
+  tags:
+   - cronjobs

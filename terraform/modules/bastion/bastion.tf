@@ -15,6 +15,13 @@ resource "aws_security_group" "bastion" {
     cidr_blocks = ["${var.in_allowed_cidr_blocks}"]
   }
 
+  ingress {
+    from_port   = 2849
+    to_port     = 2849
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -43,4 +50,7 @@ resource "aws_instance" "bastion" {
   subnet_id                   = "${var.public_subnet_id}"
   associate_public_ip_address = true
 
+ tags = {
+    Name = "app-bastion"
+  }
 }

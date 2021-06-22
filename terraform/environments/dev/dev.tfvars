@@ -18,7 +18,7 @@ private_subnets = "10.230.14.0/24,10.230.15.0/24,10.230.16.0/24"
 
 in_allowed_cidr_blocks = "185.73.154.30/32"
 
-bastion_ami = "ami-06a41750343781de7"
+bastion_ami = "ami-0bae79328cc0047d8"
 
 bastion_instance_type = "t2.micro"
 
@@ -34,9 +34,9 @@ asg_max_size = 6
 
 asg_desired_capacity = 3
 
-domain_name = "srikarun.co.uk"
+domain_name = "sarunachalamdevops.co.uk"
 
-email = "test@srikarun.co.uk"
+email = "test@sarunachalamdevops.co.uk"
 
 db_instance_class = "db.t2.micro"
 

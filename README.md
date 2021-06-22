@@ -61,7 +61,9 @@ aws ec2 create-key-pair --key-name srikanth-ao --region eu-west-1 --query 'keyMa
 cd /opt/terraform-packer/packer && packer validate base.json
 packer build base.json
 
-#Once packer execution is complete, please copy the ami image name and use them in the terraform/environment/dev/dev.tfvars for bastion_a,i
+#Once packer execution is complete, please copy the ami image name and use them in the terraform/environment/dev/dev.tfvars for bastion_ami
+
+#Please edit /opt/terraform-packer/terraform/environment/dev/dev.tfvars and replace required variables including domain name
 
 #Execute Terraform Steps
 cd /opt/terraform-packer/terraform/environment/dev

@@ -12,7 +12,7 @@ Please see [Caveats](## Caveats) section for relevant Caveats to using this repo
 
 - Requred Terraform v0.14.0 or above
 - Required packer 1.6.6 or above version
-- AWS Account with access to S£, EC2, R53 resources
+- AWS Account with access to S3, EC2, R53 resources
 - Everything in private subnets with internet access via NAT gateways
 - Instances set up with Autoscaling Groups being Elastic Load Balancers
 - Require to generate ssh  keys 
